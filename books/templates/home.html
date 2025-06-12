@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-4">
+  <h2 class="mb-4">Онлайн-библиотека</h2>
+
+  <div class="row row-cols-1 row-cols-lg-4 row-cols-md-3 row-cols-sm-2 g-4">
+    {% for book in books %}
+      <div class="col">
+        <div class="card h-100">
+          <img src="{{ book.cover_image }}" class="card-img-top object-fit-contain animate__animated animate__fadeIn" alt="{{ book.title }}">
+          <div class="card-body">
+            <h5 class="card-title animate__animated animate__fadeIn animate__delay-1s">{{ book.title }}</h5>
+            <p class="card-text animate__animated animate__fadeIn animate__delay-2s">
+              <strong>Авторы:</strong> {{ book.authors.all|join:", " }}<br>
+              <strong>Жанр:</strong> {{ book.genre }}<br>
+              <strong>Год:</strong> {{ book.year }}
+            </p>
+          </div>
+	        <div class="card-footer">
+				<a href="{% url 'book' book.pk %}" class="btn btn-primary animate__animated animate__fadeIn animate__delay-3s">Подробнее</a>
+	        </div>
+        </div>
+      </div>
+    {% empty %}
+      <p>Книг пока нет.</p>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

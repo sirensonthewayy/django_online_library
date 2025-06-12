@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+	<div class="row">
+	<div class="col-md-4 col-xs-2">
+	  <img src="{{ book.cover_image }}" class="book-cover" alt="{{ book.title }}">
+	</div>
+	<div class="col-md-8">
+		{% if messages %}
+			{% for message in messages %}
+				<div class="alert alert-{{ message.tags }}">{{ message }}</div>
+			{% endfor %}
+		{% endif %}
+	  <h2>{{ book.title }}</h2>
+	  <p><strong>Авторы:</strong> {{ book.authors.all|join:", " }}</p>
+	  <p><strong>Жанр:</strong> {{ book.genre }}</p>
+	  <p><strong>Год:</strong> {{ book.year }}</p>
+	  <p><strong>Описание:</strong><br>{{ book.description }}</p>
+	  <p><strong>Объем:</strong> {{ book.page_number }} стр.</p>
+
+	    <div class="mt-4">
+	      <h4>Заказать книгу</h4>
+	      <form method="post" id="orderForm">
+	        {% csrf_token %}
+	        <div class="mb-3">
+			    {{ order_form.email.label_tag }}
+			    {{ order_form.email }}
+	        </div>
+	        <button type="submit" name="submit_order" class="btn btn-primary">Заказать</button>
+	      </form>
+	    </div>
+
+	    <div class="mt-5">
+	      <h4>Оставить отзыв</h4>
+	      <form method="post" id="reviewForm">
+	        {% csrf_token %}
+	        <div class="mb-3">
+	          {{ review_form.as_p }}
+	        </div>
+	        <button type="submit" name="submit_review" class="btn btn-secondary">Отправить отзыв</button>
+	      </form>
+	    </div>
+	</div>
+	</div>
+
+	<div class="mt-5">
+	  <h4>Отзывы</h4>
+	  {% for review in reviews %}
+	    <div class="card mb-3">
+	      <div class="card-body">
+	        <h6 class="card-subtitle mb-2 text-muted">{{ review.user.username }} — ★ {{ review.rating }}/5</h6>
+	        <p class="card-text">{{ review.text }}</p>
+	      </div>
+	    </div>
+	  {% empty %}
+	    <p class="text-muted">Отзывов пока нет.</p>
+	  {% endfor %}
+	</div>
+</div>
+
+  <script>
+    document.querySelector('form').addEventListener('submit', function(event) {
+      const emailInput = document.getElementById('id_email');
+      const email = emailInput.value;
+      const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+      if (!emailRegex.test(email)) {
+        event.preventDefault();
+        alert('Неверный формат email');
+      }
+    });
+  </script>
+
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+  <h2 class="mb-4">Обратная связь</h2>
+	{% if messages %}
+		{% for message in messages %}
+			<div class="alert alert-{{ message.tags }}">{{ message }}</div>
+		{% endfor %}
+	{% endif %}
+  <form method="post" class="needs-validation" id="feedbackForm">
+    {% csrf_token %}
+    <div class="mb-3">
+      {{ form.as_p }}
+    </div>
+    <button type="submit" class="btn btn-primary">Отправить</button>
+  </form>
+</div>
+
+<script>
+	document.querySelector('form').addEventListener('submit', function(event) {
+	  const emailInput = document.getElementById('id_email');
+	  const email = emailInput.value;
+	  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+	  if (!emailRegex.test(email)) {
+	    event.preventDefault();
+	    alert('Неверный формат email');
+	  }
+	});
+</script>
+{% endblock %}
