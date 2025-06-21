@@ -52,7 +52,7 @@ class BookView(FormMixin, DetailView):
                 order.book = self.object
                 order.user = request.user
                 order.save()
-                messages.success(request, 'Книга успешно заказана!')
+                #messages.success(request, 'Книга успешно заказана!')
                 email = order_form.cleaned_data['email']
                 try:
                     send_mail(
@@ -62,6 +62,7 @@ class BookView(FormMixin, DetailView):
                         recipient_list=[email],
                         fail_silently=False,
                     )
+                    messages.success(request, 'Книга успешно заказана!')
                 except (SMTPException, BadHeaderError) as e:
                     messages.error(request, "Ошибка отправки email. Проверьте корректность адреса.")
                 return redirect(reverse('book', kwargs={'pk': self.object.pk}))
